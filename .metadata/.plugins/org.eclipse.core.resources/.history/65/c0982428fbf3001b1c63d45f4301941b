@@ -1,0 +1,5 @@
+package VTI.dto;
+
+public @interface Email {
+
+}

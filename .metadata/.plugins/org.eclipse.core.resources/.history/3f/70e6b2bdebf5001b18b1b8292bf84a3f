@@ -1,0 +1,154 @@
+package VTI.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import VTI.dto.GroupDTO;
+import VTI.entity.Group;
+import VTI.entity.Parameters;
+import VTI.repository.IGroupRepository;
+
+@Service
+public class GroupService implements IGroupService {
+
+	@Autowired
+	private IGroupRepository repository;
+
+	@Override
+	public List<GroupDTO> getAllGroups(Parameters parameters) {
+
+		//List<GroupDTO> listDTOs = new ArrayList<>();
+		//List<Group> listGroups = null;
+		//Pageable pageable = null;
+		Specification<Group> where = null;
+		Sort sort = null;
+
+		if (parameters.getField() != null && parameters.getField().isEmpty()) {
+			if (parameters.getTypeSort() != null && parameters.getTypeSort().equals("DESC")) {
+
+				sort = Sort.by(parameters.getTypeSort()).descending();
+			} else {
+				sort = Sort.by(parameters.getTypeSort()).ascending();
+			}
+		}
+
+		if (parameters.getSearch() != null && !parameters.getSearch().isEmpty()) {
+			where = searchByGroup(parameters.getSearch());
+		}
+
+		if (parameters.getMaxId() > 0) {
+			if (where == null) {
+				where = lessThanEqualMaxId((short) parameters.getMaxId());
+			} else {
+				where = where.and(lessThanEqualMaxId((short) parameters.getMaxId()));
+			}
+		}
+
+		if (parameters.getMinId() > 0) {
+			if (where == null) {
+				where = lessThanEqualMinId((short) parameters.getMinId());
+			} else {
+				where = where.and(lessThanEqualMinId((short) parameters.getMinId()));
+			}
+		}
+		//listGroups = repository.findAll(sort);
+		return null;
+	}
+
+	private Specification<Group> lessThanEqualMinId(short minId) {
+		// TODO Auto-generated method stub
+		return new Specification<Group>() {
+
+			@Override
+			public Predicate toPredicate(Root<Group> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				// TODO Auto-generated method stub
+				return criteriaBuilder.ge(root.get("groupId"), minId);
+			}
+		};
+	}
+
+	private Specification<Group> lessThanEqualMaxId(short maxId) {
+		// TODO Auto-generated method stub
+		return new Specification<Group>() {
+
+			@Override
+			public Predicate toPredicate(Root<Group> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				// TODO Auto-generated method stub
+				return criteriaBuilder.le(root.get("groupId"), maxId);
+			}
+		};
+	}
+
+	private Specification<Group> searchByGroup(String groupName) {
+		// TODO Auto-generated method stub
+		return new Specification<Group>() {
+
+			@Override
+			public Predicate toPredicate(Root<Group> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				// TODO Auto-generated method stub
+				return criteriaBuilder.like(root.get("groupName"), "%" + "groupName" + "%");
+			}
+
+		};
+	}
+
+	@Override
+	public Group getGroupByID(short groupId) {
+		// TODO Auto-generated method stub
+		return repository.findById(groupId).get();
+	}
+
+	@Override
+	public Group getGroupByName(String groupName) {
+		// TODO Auto-generated method stub
+		return repository.findByGroupName(groupName);
+	}
+
+	@Override
+	public void updateGroup(Group group) {
+		// TODO Auto-generated method stub
+		repository.save(group);
+	}
+
+	@Override
+	public void deleteGroup(short groupId) {
+		// TODO Auto-generated method stub
+
+		repository.deleteById(groupId);
+	}
+
+	@Override
+	public boolean isGroupExistsByID(short groupId) {
+		// TODO Auto-generated method stub
+		return repository.existsById(groupId);
+	}
+
+	@Override
+	public boolean isGroupExistsByName(String groupName) {
+		// TODO Auto-generated method stub
+		return repository.existsByGroupName(groupName);
+	}
+
+	@Override
+	public void createGroup(Group group) {
+		// TODO Auto-generated method stub
+		repository.save(group);
+	}
+
+	@Override
+	public void deleteMultiGroups(List<Short> ids) {
+		
+	}
+
+}

@@ -1,0 +1,8 @@
+package VTI.dto;
+
+import javax.validation.constraints.Email;
+
+public class UserDTO {
+
+	
+}

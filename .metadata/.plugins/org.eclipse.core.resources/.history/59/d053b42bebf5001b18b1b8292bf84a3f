@@ -1,0 +1,12 @@
+package VTI.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import VTI.entity.Group;
+
+public interface IGroupRepository extends JpaRepository<Group, Short>{
+
+	public Group findByGroupName(String groupName);
+	
+	public boolean existsByGroupName(String groupName);
+}

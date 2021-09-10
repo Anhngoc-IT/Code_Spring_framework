@@ -1,0 +1,5 @@
+package VTI.entity;
+
+public class User {
+
+}

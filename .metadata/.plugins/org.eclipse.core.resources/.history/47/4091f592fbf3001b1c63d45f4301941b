@@ -1,0 +1,5 @@
+package VTI.service;
+
+public interface IGroupService {
+
+}

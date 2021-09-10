@@ -1,0 +1,26 @@
+package VTI.service;
+
+import java.util.List;
+
+import VTI.dto.GroupDTO;
+import VTI.entity.Group;
+import VTI.entity.Parameters;
+
+public interface IGroupService {
+
+    public List<GroupDTO> getAllGroups(Parameters parameters);
+	
+	public Group getGroupByID(short groupId);
+
+	public Group getGroupByName(String groupName);
+
+	public void createGroup(Group group);
+
+	public void updateGroup(Group group);
+
+	public void deleteGroup(short groupId);
+
+	public boolean isGroupExistsByID(short groupId);
+
+	public boolean isGroupExistsByName(String groupName);
+}

@@ -1,0 +1,23 @@
+package VTI.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
+import VTI.entity.Group;
+
+public interface IGroupRepository extends JpaRepository<Group, Short>{
+
+	public Group findByGroupName(String groupName);
+	
+	public boolean existsByGroupName(String groupName);
+	
+	@Modifying
+	@Transactional
+	@Query("Delete From Group Where id In(:ids)")
+	public void deleteByGroupId(@Param("ids") List<Short> ids) ;
+}
